@@ -1,0 +1,27 @@
+#!/usr/local/bin/python
+
+# IMPORT: Standard Modules
+import json											                                            # JSON Lib
+import argparse                                                                                 # Parse Arguments
+
+
+# FUNCTION: Write JSON File (No Logging)
+def writeJSONFile(file, info):
+    with open(file, 'w+') as content:
+        json.dump(info, content, indent=4, sort_keys=True)
+
+
+# Function Description
+parser = argparse.ArgumentParser(description='Update the status of the Docker container')
+
+# Arguments
+parser.add_argument('--nr', metavar='step-number', type=int, help="Provide the current step")
+parser.add_argument('--total', metavar='total-steps', type=int, help="Provide the total amount of steps")
+parser.add_argument('--name', metavar='name', type=str, help="Provide the name of the step")
+
+# Fetch arguments
+args = parser.parse_args()
+
+
+# Write to File
+writeJSONFile('/tmp/ready.json', {"stepNr": args.nr, "totalSteps": args.total, "stepName": args.name})

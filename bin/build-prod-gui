@@ -1,0 +1,61 @@
+#!/bin/bash
+
+################################################################################
+# Author:     Thomas D'haenens
+# License:    GPL-3.0
+# Link:       https://github.com/BENEATLY/neat-community/
+# Contact:    https://neatly.be/
+################################################################################
+
+
+# Clean Current Production GUI
+rm -f /var/www/html/*
+rm -rf /var/www/neatly/base/*
+rm -rf /opt/neatly/base/gui/dist/*
+rm -f /opt/neatly/base/gui/src/assets/config.json
+rm -rf /opt/neatly/base/gui/src/assets/translations
+rm -rf /opt/neatly/base/gui/src/assets/routes
+rm -rf /opt/neatly/base/gui/src/assets/logos
+rm -rf /opt/neatly/base/gui/src/assets/images
+rm -rf /opt/neatly/base/gui/src/assets/icons
+rm -rf /opt/neatly/base/gui/src/assets/svgs
+rm -rf /opt/neatly/base/gui/src/assets/backgrounds
+rm -rf /opt/neatly/base/gui/src/assets/hashes
+rm -rf /opt/neatly/base/gui/src/assets/objects
+ln -s /etc/neatly/base/gui/gui.json /opt/neatly/base/gui/src/assets/config.json
+ln -s /etc/neatly/base/gui/translations/ /opt/neatly/base/gui/src/assets/
+ln -s /etc/neatly/base/gui/routes/ /opt/neatly/base/gui/src/assets/
+ln -s /etc/neatly/base/gui/logos/ /opt/neatly/base/gui/src/assets/
+ln -s /etc/neatly/base/gui/images/ /opt/neatly/base/gui/src/assets/
+ln -s /etc/neatly/base/gui/icons/ /opt/neatly/base/gui/src/assets/
+ln -s /etc/neatly/base/gui/svgs/ /opt/neatly/base/gui/src/assets/
+ln -s /etc/neatly/base/gui/backgrounds/ /opt/neatly/base/gui/src/assets/
+ln -s /etc/neatly/base/gui/hashes/ /opt/neatly/base/gui/src/assets
+ln -s /var/lib/neatly/base/objects/ /opt/neatly/base/gui/src/assets/
+
+# Build Production GUI
+cd /opt/neatly/base/gui/src/
+npm run neatly-build
+
+# Deploy New Production GUI
+rm -f /opt/neatly/base/gui/dist/assets/config.json
+rm -rf /opt/neatly/base/gui/dist/assets/translations
+rm -rf /opt/neatly/base/gui/dist/assets/routes
+rm -rf /opt/neatly/base/gui/dist/assets/logos
+rm -rf /opt/neatly/base/gui/dist/assets/images
+rm -rf /opt/neatly/base/gui/dist/assets/icons
+rm -rf /opt/neatly/base/gui/dist/assets/svgs
+rm -rf /opt/neatly/base/gui/dist/assets/backgrounds
+rm -rf /opt/neatly/base/gui/dist/assets/hashes
+rm -rf /opt/neatly/base/gui/dist/assets/objects
+ln -s /etc/neatly/base/gui/gui.json /opt/neatly/base/gui/dist/assets/config.json
+ln -s /etc/neatly/base/gui/translations/ /opt/neatly/base/gui/dist/assets/
+ln -s /etc/neatly/base/gui/routes/ /opt/neatly/base/gui/dist/assets/
+ln -s /etc/neatly/base/gui/logos/ /opt/neatly/base/gui/dist/assets/
+ln -s /etc/neatly/base/gui/images/ /opt/neatly/base/gui/dist/assets/
+ln -s /etc/neatly/base/gui/icons/ /opt/neatly/base/gui/dist/assets/
+ln -s /etc/neatly/base/gui/svgs/ /opt/neatly/base/gui/dist/assets/
+ln -s /etc/neatly/base/gui/backgrounds/ /opt/neatly/base/gui/dist/assets/
+ln -s /etc/neatly/base/gui/hashes/ /opt/neatly/base/gui/dist/assets/
+ln -s /var/lib/neatly/base/objects/ /opt/neatly/base/gui/dist/assets/
+ln -s /opt/neatly/base/gui/dist/* /var/www/neatly/base/

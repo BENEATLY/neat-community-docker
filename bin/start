@@ -1,0 +1,228 @@
+#!/bin/bash
+
+# Start Message
+echo 'STARTING UP DOCKER CONTAINER...'
+
+# Already Set Up?
+if [ -f "/etc/ready.neatly" ]; then
+
+  # Step
+  /usr/local/bin/readypush --nr 1 --total 7 --name Starting\ PostgreSQL\ DB
+
+  # Start PostgreSQL DB
+  /usr/sbin/service postgresql-12 start
+  sleep 15
+
+  # Step
+  /usr/local/bin/readypush --nr 2 --total 7 --name Starting\ Web\ Server
+
+  # Start Web Server
+  /bin/systemctl start nginx
+
+  # Step
+  /usr/local/bin/readypush --nr 3 --total 7 --name Starting\ Zookeeper
+
+  # Start Zookeeper
+  /bin/systemctl start kafka-zookeeper
+  sleep 20
+
+  # Step
+  /usr/local/bin/readypush --nr 4 --total 7 --name Starting\ Kafka
+
+  # Start Kafka
+  /bin/systemctl start kafka
+  sleep 10
+
+  # Step
+  /usr/local/bin/readypush --nr 5 --total 7 --name Starting\ Neatly\ Base
+
+  # Start Neatly Base
+  /bin/systemctl start neatly-base
+  sleep 10
+
+  # Step
+  /usr/local/bin/readypush --nr 6 --total 7 --name Building\ the\ Angular\ Development\ GUI
+
+  # Build the Angular Development GUI
+  cd /opt/neatly/base/gui/src/
+  /bin/bash -c 'npm run neatly-serve &'
+  sleep 35
+
+  # Step
+  /usr/local/bin/readypush --nr 7 --total 7 --name Done
+
+else
+
+  # Step
+  /usr/local/bin/readypush --nr 0 --total 18 --name Cleaning\ Up\ System
+
+  # Clean Up System
+  rm -Rf /var/lib/neatly/base/plugin/
+  mkdir /var/lib/neatly/base/plugin
+  rm -Rf /var/log/neatly/base/*
+  rm -f /var/log/neatly/base/*
+  rm -f /etc/systemd/system/neatly*
+  rm -Rf /opt/neatly/base/plugin/
+  mkdir /var/log/neatly/base/nginx
+  mkdir /var/log/neatly/base/kafka
+
+  # Step
+  /usr/local/bin/readypush --nr 1 --total 18 --name Copying\ Services
+
+  # Copy Services
+  chmod 755 /tmp/neatly/base/system/*
+  cp /tmp/neatly/base/system/* /etc/systemd/system/
+
+  # Step
+  /usr/local/bin/readypush --nr 2 --total 18 --name Copying\ Executables
+
+  # Copy Executables
+  chmod 755 /tmp/neatly/base/bin/*
+  cp /tmp/neatly/base/bin/* /usr/local/bin/
+
+  # Step
+  /usr/local/bin/readypush --nr 3 --total 18 --name Starting\ PostgreSQL\ DB
+
+  # Start PostgreSQL DB
+  /usr/sbin/service postgresql-12 start
+  sleep 15
+
+  # Step
+  /usr/local/bin/readypush --nr 4 --total 18 --name Starting\ Web\ Server
+
+  # Start Web Server
+  /bin/systemctl start nginx
+
+  # Step
+  /usr/local/bin/readypush --nr 5 --total 18 --name Starting\ Zookeeper
+
+  # Start Zookeeper
+  /bin/systemctl start kafka-zookeeper
+  sleep 10
+
+  # Step
+  /usr/local/bin/readypush --nr 6 --total 18 --name Starting\ Kafka
+
+  # Start Kafka
+  /bin/systemctl start kafka
+  sleep 10
+
+  # Step
+  /usr/local/bin/readypush --nr 7 --total 18 --name Creating\ Tables
+
+  # Create Tables
+  python /var/lib/neatly/base/createTables.py
+
+  # Step
+  /usr/local/bin/readypush --nr 8 --total 18 --name Creating\ Default\ Resources
+
+  # Create Default Resources
+  python /var/lib/neatly/base/addDefaultResources.py
+
+  # Step
+  /usr/local/bin/readypush --nr 9 --total 18 --name Starting\ Neatly\ Base
+
+  # Start Neatly Base
+  /bin/systemctl start neatly-base
+  echo 'hhh' > /etc/ready.neatly
+  sleep 10
+
+  # Step
+  /usr/local/bin/readypush --nr 10 --total 18 --name Cleaning\ Up\ System
+
+  # Clean Up System
+  rm -f /var/www/html/*
+  rm -rf /opt/neatly/base/gui/node_modules/
+  cd /opt/neatly/base/gui/src/
+  rm -f /opt/neatly/base/gui/src/assets/config.json
+  rm -rf /opt/neatly/base/gui/src/assets/translations
+  rm -rf /opt/neatly/base/gui/src/assets/routes
+  rm -rf /opt/neatly/base/gui/src/assets/icons
+  rm -rf /opt/neatly/base/gui/src/assets/logos
+  rm -rf /opt/neatly/base/gui/src/assets/images
+  rm -rf /opt/neatly/base/gui/src/assets/svgs
+  rm -rf /opt/neatly/base/gui/src/assets/backgrounds
+  rm -rf /opt/neatly/base/gui/src/assets/hashes
+  rm -rf /opt/neatly/base/gui/src/assets/objects
+
+  # Step
+  /usr/local/bin/readypush --nr 11 --total 18 --name Creating\ Symbolic\ Link\ for\ GUI\ Config
+
+  # Create Symbolic Link for GUI Config
+  ln -s /etc/neatly/base/gui/gui.json /opt/neatly/base/gui/src/assets/config.json
+  ln -s /etc/neatly/base/gui/translations/ /opt/neatly/base/gui/src/assets/
+  ln -s /etc/neatly/base/gui/routes/ /opt/neatly/base/gui/src/assets/
+  ln -s /etc/neatly/base/gui/icons/ /opt/neatly/base/gui/src/assets/
+  ln -s /etc/neatly/base/gui/logos/ /opt/neatly/base/gui/src/assets/
+  ln -s /etc/neatly/base/gui/images/ /opt/neatly/base/gui/src/assets/
+  ln -s /etc/neatly/base/gui/svgs/ /opt/neatly/base/gui/src/assets/
+  ln -s /etc/neatly/base/gui/backgrounds/ /opt/neatly/base/gui/src/assets/
+  ln -s /etc/neatly/base/gui/hashes/ /opt/neatly/base/gui/src/assets/
+  ln -s /var/lib/neatly/base/objects/ /opt/neatly/base/gui/src/assets/
+
+  # Step
+  /usr/local/bin/readypush --nr 12 --total 18 --name Installing\ Required\ GUI\ Build\ Packages\ via\ NPM
+
+  # Install Required GUI Build Packages via NPM
+  npm install
+
+  # Step
+  /usr/local/bin/readypush --nr 13 --total 18 --name Installing\ Angular\ CLI
+
+  # Install Angular CLI
+  npm link @angular/cli@9.1.7
+
+  # Step
+  /usr/local/bin/readypush --nr 14 --total 18 --name Creating\ Timezone\ Contour\ Files
+
+  # Create Timezone Contour Files
+  cd /opt/neatly/base/gui/src/assets/geojson/timezone
+  python splitTimezones.py
+  cd /opt/neatly/base/gui/src/
+
+  # Step
+  /usr/local/bin/readypush --nr 15 --total 18 --name Building\ the\ Production\ GUI\ for\ Web\ Server
+
+  # Build the Production GUI for Web Server
+  npm run neatly-build
+
+  # Step
+  /usr/local/bin/readypush --nr 16 --total 18 --name Creating\ Symbolic\ Link\ for\ Production\ GUI
+
+  # Create Symbolic Link for Production GUI
+  rm -f /opt/neatly/base/gui/dist/assets/config.json
+  rm -rf /opt/neatly/base/gui/dist/assets/translations
+  rm -rf /opt/neatly/base/gui/dist/assets/routes
+  rm -rf /opt/neatly/base/gui/dist/assets/icons
+  rm -rf /opt/neatly/base/gui/dist/assets/logos
+  rm -rf /opt/neatly/base/gui/dist/assets/images
+  rm -rf /opt/neatly/base/gui/dist/assets/svgs
+  rm -rf /opt/neatly/base/gui/dist/assets/backgrounds
+  rm -rf /opt/neatly/base/gui/dist/assets/hashes
+  rm -rf /opt/neatly/base/gui/dist/assets/objects
+  ln -s /etc/neatly/base/gui/gui.json /opt/neatly/base/gui/dist/assets/config.json
+  ln -s /etc/neatly/base/gui/translations/ /opt/neatly/base/gui/dist/assets/
+  ln -s /etc/neatly/base/gui/routes/ /opt/neatly/base/gui/dist/assets/
+  ln -s /etc/neatly/base/gui/icons/ /opt/neatly/base/gui/dist/assets/
+  ln -s /etc/neatly/base/gui/logos/ /opt/neatly/base/gui/dist/assets/
+  ln -s /etc/neatly/base/gui/images/ /opt/neatly/base/gui/dist/assets/
+  ln -s /etc/neatly/base/gui/svgs/ /opt/neatly/base/gui/dist/assets/
+  ln -s /etc/neatly/base/gui/backgrounds/ /opt/neatly/base/gui/dist/assets/
+  ln -s /etc/neatly/base/gui/hashes/ /opt/neatly/base/gui/dist/assets/
+  ln -s /var/lib/neatly/base/objects/ /opt/neatly/base/gui/dist/assets/
+  ln -s /opt/neatly/base/gui/dist/* /var/www/neatly/base/
+
+  # Step
+  /usr/local/bin/readypush --nr 17 --total 18 --name Building\ the\ Angular\ Development\ GUI
+
+  # Build the Angular Development GUI
+  /bin/bash -c 'npm run neatly-serve &'
+  sleep 35
+
+  # Step
+  /usr/local/bin/readypush --nr 18 --total 18 --name Done
+
+fi
+
+# Keep Docker Container Alive
+sleep infinity

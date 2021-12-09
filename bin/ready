@@ -1,0 +1,62 @@
+#!/usr/local/bin/python
+
+# IMPORT: Standard Modules
+import time											                                            # Time Lib
+from datetime import timedelta									                                # Date Lib
+import sys											                                            # System Lib
+import json											                                            # JSON Lib
+import os                                                                                       # OS Lib
+import subprocess                                                                               # Subprocessing Lib
+
+
+# FUNCTION: Read JSON File (No Logging)
+def readJSONFile(file):
+    with open(file) as content:
+        return json.load(content)
+
+# FUNCTION: Print Info Block
+def printInfoBlock(progress, step):
+    print("\n#####################################################################################\n")
+    print("Welcome to the Neatly Base Docker Environment.")
+    print("This Docker Environment can be used for Testing and Build purposes.\n")
+    if progress != 100: print("Not all services are up yet. Please wait..\n")
+    else:
+        print("All services are UP!\n")
+        apiConfig = readJSONFile("/etc/neatly/base/api/default.json")
+        print("The HTTP Development Web Server is reachable at:        http://localhost:6001/")
+        print("The HTTP Production Web Server is reachable at:         http://localhost:6002/")
+        print("The HTTPS Production Web Server is reachable at:        https://localhost:6003/")
+        print("The API Server is reachable at:                         " + apiConfig['protocol'] + "://localhost:" + str(apiConfig['port']) + apiConfig['basePath'])
+        print("The PostgreSQL Database is reachable at:                localhost:6020")
+        print()
+    print("Progress:  " + int(progress/2)*"▓" + (50-int(progress/2))*"░" + "  " + str(progress) + "%\n")
+    upTime = subprocess.getoutput("ps -o etime= -p 1").replace(' ', '')
+    upTimeSeconds = 0
+    if ('-' in upTime):
+        upTimeSeconds += int(upTime.split('-')[0])*60*60*24
+        upTime = upTime.split('-')[1]
+    if (len(upTime.split(':')) == 3):
+        upTimeSeconds += int(upTime.split(':')[0])*60*60 + int(upTime.split(':')[1])*60 + int(upTime.split(':')[2])
+    if (len(upTime.split(':')) == 2):
+        upTimeSeconds += int(upTime.split(':')[0])*60 + int(upTime.split(':')[1])
+    print("Uptime:    " + str(timedelta(seconds=upTimeSeconds)))
+    if progress != 100: print("Step:      " + step)
+    print("\n#####################################################################################\n")
+
+# FUNCTION: Remove Info Block
+def removeInfoBlock():
+	for i in range(0,15):
+		sys.stdout.write("\033[F")
+		sys.stdout.write("\033[K")
+
+
+# Start Checking
+steps = readJSONFile("/tmp/ready.json")
+while (steps['stepNr'] != steps['totalSteps']):
+	steps = readJSONFile("/tmp/ready.json")
+	printInfoBlock(int(steps['stepNr']*100/steps['totalSteps']), steps['stepName'])
+	time.sleep(1)
+	removeInfoBlock()
+
+# Everything Done
+printInfoBlock(100, None)

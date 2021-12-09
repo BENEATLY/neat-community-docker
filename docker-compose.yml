@@ -1,0 +1,21 @@
+version: '3.3'
+
+services:
+  neat-community:
+    image: neat-community:centos-7
+    container_name: neat-community
+    volumes:
+      - ./neat-community/config/:/etc/neatly/base/
+      - ./neat-community/lib/:/var/lib/neatly/base/
+      - ./neat-community/bin/:/tmp/neatly/base/bin/
+      - ./neat-community/system/:/tmp/neatly/base/system/
+      - ./neat-community/opt/gui/:/opt/neatly/base/gui/
+      - ./logs/:/var/log/neatly/base
+    ports:
+      - 6001:6001
+      - 6002:80
+      - 6003:443
+      - 6010:6010
+      - 6020:5432
+    environment:
+      - NG_CLI_ANALYTICS=false
