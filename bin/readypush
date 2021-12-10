@@ -1,5 +1,13 @@
 #!/usr/local/bin/python
 
+################################################################################
+# Author:     Thomas D'haenens
+# License:    GPL-3.0
+# Link:       https://github.com/BENEATLY/neat-community-docker/
+# Contact:    https://neatly.be/
+################################################################################
+
+
 # IMPORT: Standard Modules
 import json											                                            # JSON Lib
 import argparse                                                                                 # Parse Arguments

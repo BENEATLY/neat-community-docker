@@ -1,3 +1,8 @@
+-- Author:     Thomas D'haenens
+-- License:    GPL-3.0
+-- Link:       https://github.com/BENEATLY/neat-community-docker/
+-- Contact:    https://neatly.be/
+
 ALTER USER postgres WITH PASSWORD 'neat';
 CREATE USER neat WITH PASSWORD 'neat';
 CREATE DATABASE neat;

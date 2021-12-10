@@ -1,5 +1,13 @@
 #!/bin/sh
-#
+
+################################################################################
+# Author:     Thomas D'haenens
+# License:    GPL-3.0
+# Link:       https://github.com/BENEATLY/neat-community-docker/
+# Contact:    https://neatly.be/
+################################################################################
+
+
 # postgresql-setup	Initialization and upgrade operations for PostgreSQL
 
 # PGVERSION is the full package version, e.g., 12.0
