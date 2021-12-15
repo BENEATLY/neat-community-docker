@@ -120,7 +120,6 @@ RUN mkdir /var/lib/neatly/base
 # File Folders
 RUN mkdir /opt/neatly
 RUN mkdir /opt/neatly/base
-RUN mkdir /opt/neatly/base/gui
 
 # Temp Folders
 RUN mkdir /tmp/neatly

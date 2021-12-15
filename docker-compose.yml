@@ -17,7 +17,7 @@ services:
       - ./neat-community/lib/:/var/lib/neatly/base/
       - ./neat-community/bin/:/tmp/neatly/base/bin/
       - ./neat-community/system/:/tmp/neatly/base/system/
-      - ./neat-community/opt/gui/:/opt/neatly/base/gui/
+      - ./neat-community/opt/:/opt/neatly/base/
       - ./logs/:/var/log/neatly/base
     ports:
       - 6001:6001
